@@ -1,0 +1,16 @@
+[
+  {
+	"num_of_trans": 4,
+	"tran_type": "CR",
+	"min_amt": 50,
+	"max_amt": 200,
+	"tran_code": ["Flight", "Accomodation"]
+  },
+	{
+		"num_of_trans": 3,
+		"tran_type": "DR",
+		"min_amt": 100,
+		"max_amt": 500,
+		"tran_code": ["Return", "Payment"]
+		}
+]
