@@ -24,13 +24,18 @@ func ReadConfig(filepath string) ([]m.Config, error) {
 	return c, nil
 }
 
-// Write to json
-func WriteJson(filename string, trans interface{}) error {
+// Write to json based on empty interface, so it can write transactions as well summary outputs
+func WriteJson(filename string, data interface{}, isIndent bool) error {
 	file, _ := os.OpenFile(filename, os.O_CREATE, os.ModePerm)
 	defer file.Close()
 	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", " ")
-	if err := encoder.Encode(trans); err != nil {
+	if isIndent {
+		encoder.SetIndent("", " ")
+	} else {
+		encoder.SetIndent("", "")
+	}
+
+	if err := encoder.Encode(data); err != nil {
 		return err
 	}
 	return nil

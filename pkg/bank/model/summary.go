@@ -5,3 +5,5 @@ type Summary struct {
 	TranType    string  `json:"tran_type"`
 	TotalAmount float64 `json:"total_amt"`
 }
+
+type SummaryList []Summary

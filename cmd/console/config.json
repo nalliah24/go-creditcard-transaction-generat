@@ -4,7 +4,7 @@
 	"tran_type": "CR",
 	"min_amt": 50,
 	"max_amt": 200,
-	"tran_code": ["Flight", "Accomodation"]
+	"tran_code": ["Flight", "Accommodation"]
   },
 	{
 		"num_of_trans": 3,
