@@ -1,0 +1,58 @@
+[
+ {
+  "id": 1,
+  "customer_id": 15,
+  "tran_type": "DR",
+  "tran_code": "Payment",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 342.93
+ },
+ {
+  "id": 2,
+  "customer_id": 24,
+  "tran_type": "DR",
+  "tran_code": "Payment",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 180.91
+ },
+ {
+  "id": 3,
+  "customer_id": 90,
+  "tran_type": "DR",
+  "tran_code": "Return",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 164.84
+ },
+ {
+  "id": 4,
+  "customer_id": 15,
+  "tran_type": "CR",
+  "tran_code": "Accommodation",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 128.6
+ },
+ {
+  "id": 5,
+  "customer_id": 65,
+  "tran_type": "CR",
+  "tran_code": "Flight",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 49.6
+ },
+ {
+  "id": 6,
+  "customer_id": 83,
+  "tran_type": "CR",
+  "tran_code": "Accommodation",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 14.56
+ },
+ {
+  "id": 7,
+  "customer_id": 97,
+  "tran_type": "CR",
+  "tran_code": "Accommodation",
+  "tran_date": "2022-03-07 19:18:35",
+  "amount": 46.01
+ }
+]
