@@ -1,5 +1,12 @@
-[{"num_of_trans":4,"tran_type":"CR","total_amt":267.37},{"num_of_trans":3,"tran_type":"DR","total_amt":553.99}]
-"DR",
-  "total_amt": 733.67
+[
+ {
+  "num_of_trans": 4,
+  "tran_type": "CR",
+  "total_amt": 395.24
+ },
+ {
+  "num_of_trans": 3,
+  "tran_type": "DR",
+  "total_amt": 1016.32
  }
 ]
