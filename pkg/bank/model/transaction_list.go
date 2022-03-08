@@ -27,9 +27,13 @@ func prepareSummaryForType(typ string, trs TransactionList) Summary {
 	s.TranType = typ
 	for _, tr := range trs {
 		if tr.TranType == typ {
-			s.TotalAmount = s.TotalAmount + tr.Amount
+			s.TotalAmount = truncate(s.TotalAmount + tr.Amount)
 			s.NumOfTrans++
 		}
 	}
 	return s
+}
+
+func truncate(num float64) float64 {
+	return float64(int(num*100)) / 100
 }

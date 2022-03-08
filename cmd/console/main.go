@@ -13,73 +13,35 @@ import (
 
 func main() {
 	args := os.Args[1:]
-	genTransactions(args)
-}
 
-func genTransactions(args []string) {
-	isIndent := false
+	valArgs(args)
+
+	isIndent := isIndent(args)
+
+	fmt.Println("Read configuratins from 'config.json'")
+	cfgs := readConfig()
+
+	// all good. start gen transactions
+	var trans m.TransactionList
 	outFileTrans := "output_trans"
 	outFileSummary := "output_summary"
 
-	if len(args) <= 0 {
-		fmt.Println("1st Argument required to process trans data: 1 = Sequential, 2 = Concurrent")
-		fmt.Println("2nd Argument optional: true = 'Indent' Json in output file")
-		os.Exit(1)
-	}
-
-	mode := args[0]
-	if mode != "1" && mode != "2" {
-		fmt.Println("1St argument must be 1 or 2")
-		os.Exit(1)
-	}
-
-	// check if json output as Indented?
-	if len(args) == 2 {
-		v, err := strconv.ParseBool(args[1])
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-		isIndent = v
-	}
-
-	// read config
-	fmt.Println("Read configuratins from 'config.json'")
-	cfgs, err := infra.ReadConfig("config.json")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	// gen transactions
-	var trans m.TransactionList
 	start := time.Now()
 
 	if args[0] == "1" {
 		fmt.Println("Generating mock transactions sequentially")
-		trans, err = genTransactionsSeq(cfgs)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-		outFileTrans = fmt.Sprintf("%s_seq_%d.json", outFileTrans, len(trans))
+		trans = genTransactionsSeq(cfgs)
+		infra.WriteJson(fmt.Sprintf("%s_seq_%d.json", outFileTrans, len(trans)), trans, isIndent)
 	}
 
 	if args[0] == "2" {
 		fmt.Println("Generating mock transactions concurrently")
-		trans, err = genTransactionsConc(cfgs)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-		outFileTrans = fmt.Sprintf("%s_conc_%d.json", outFileTrans, len(trans))
+		trans = genTransactionsConc(cfgs)
+		infra.WriteJson(fmt.Sprintf("%s_conc_%d.json", outFileTrans, len(trans)), trans, isIndent)
 	}
 
 	elapsed := time.Since(start)
 	fmt.Println("Time took: ", elapsed)
-
-	fmt.Println("Calling file handler to write transactions: ", outFileTrans)
-	infra.WriteJson(outFileTrans, trans, isIndent)
 
 	// prepare summary
 	summaries, err := trans.PrepareSummary(cfgs)
@@ -95,18 +57,55 @@ func genTransactions(args []string) {
 	fmt.Println("Done")
 }
 
-func genTransactionsSeq(cfgs []m.Config) (m.TransactionList, error) {
-	trans, err := ts.GenerateAllTransactions(cfgs)
-	if err != nil {
-		return nil, err
+func valArgs(args []string) {
+	if len(args) <= 0 {
+		fmt.Println("1st Argument required to process trans data: 1 = Sequential, 2 = Concurrent")
+		fmt.Println("2nd Argument optional: true = 'Indent' Json in output file")
+		os.Exit(1)
 	}
-	return trans, nil
+
+	mode := args[0]
+	if mode != "1" && mode != "2" {
+		fmt.Println("1St argument must be 1 or 2")
+		os.Exit(1)
+	}
 }
 
-func genTransactionsConc(cfgs []m.Config) (m.TransactionList, error) {
+func isIndent(args []string) bool {
+	if len(args) == 2 {
+		v, err := strconv.ParseBool(args[1])
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		return v
+	}
+	return false
+}
+
+func readConfig() []m.Config {
+	cfgs, err := infra.ReadConfig("config.json")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	return cfgs
+}
+
+func genTransactionsSeq(cfgs []m.Config) (m.TransactionList) {
+	trans, err := ts.GenerateAllTransactions(cfgs)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	return trans
+}
+
+func genTransactionsConc(cfgs []m.Config) (m.TransactionList) {
 	trans, err := ts.GenerateAllTransactionsConc(cfgs)
 	if err != nil {
-		return nil, err
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
-	return trans, nil
+	return trans
 }
