@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	infra "github.com/nalliah24/go-creditcard-transaction-generator/pkg/bank/infracture"
 	m "github.com/nalliah24/go-creditcard-transaction-generator/pkg/bank/model"
@@ -24,29 +25,44 @@ func TransHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+
 		// all good. start gen transactions
+		path := "../../1data_out"
+		outFileName := fmt.Sprintf("%s/%s", path, "output_web.json")
 		var trans m.TransactionList
 		isIndent := false
-		outFileTrans := "output_trans_web"
-		outFileSummary := "output_summary_web"
+
 		trans, err = ts.GenerateAllTransactionsConc(cfgs)
 		if err != nil {
 			fmt.Println(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		infra.WriteJson(fmt.Sprintf("%s_conc_%d.json", outFileTrans, len(trans)), trans, isIndent)
 
 		// prepare summary
 		summaries, err := trans.PrepareSummary(cfgs)
 		if err != nil {
 			fmt.Println(err.Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		outFileSummary = fmt.Sprintf("%s_%d.json", outFileSummary, len(trans))
-		infra.WriteJson(outFileSummary, summaries, isIndent)
-		// endof trans and summary
+		result := m.Result{
+			Timestamp:     time.Now().Format(time.RFC3339),
+			NumberOfTrans: len(trans),
+			Summaries:     summaries,
+			Data:          trans,
+		}
+
+		fmt.Println("Delete existing output and write result: ", outFileName)
+		err = infra.DeleteFileNameStartsWith(path, "output_")
+		if err != nil {
+			fmt.Println("error deleting output file ", err.Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		infra.WriteJson(outFileName, result, isIndent)
 
 		// extract first 5 trans as sample response
 		sdata := trans[:5]
