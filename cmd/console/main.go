@@ -12,9 +12,14 @@ import (
 )
 
 func main() {
-	confName := "config.json"
-
 	args := os.Args[1:]
+	run(args)
+}
+
+func run(args []string) {
+	path := "data"
+	confName := fmt.Sprintf("%s/%s", path, "config.json")
+	outFileName := fmt.Sprintf("%s/%s", path, "output.json")
 
 	v := valArgs(args)
 	if v != true {
@@ -36,9 +41,6 @@ func main() {
 
 	// all good. start gen transactions
 	var trans m.TransactionList
-	outFileTrans := "output_trans"
-	outFileSummary := "output_summary"
-
 	start := time.Now()
 
 	if args[0] == "1" {
@@ -48,7 +50,6 @@ func main() {
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
-		infra.WriteJson(fmt.Sprintf("%s_seq_%d.json", outFileTrans, len(trans)), trans, isIndent)
 	}
 
 	if args[0] == "2" {
@@ -58,7 +59,6 @@ func main() {
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
-		infra.WriteJson(fmt.Sprintf("%s_conc_%d.json", outFileTrans, len(trans)), trans, isIndent)
 	}
 
 	elapsed := time.Since(start)
@@ -71,9 +71,22 @@ func main() {
 		return
 	}
 
-	outFileSummary = fmt.Sprintf("%s_%d.json", outFileSummary, len(trans))
-	fmt.Println("Calling file handler to write summary: ", outFileSummary)
-	infra.WriteJson(outFileSummary, summaries, isIndent)
+	// prepare result
+	result := m.Result{
+		Timestamp:     time.Now().Format(time.RFC3339),
+		NumberOfTrans: len(trans),
+		Summaries:     summaries,
+		Data:          trans,
+	}
+
+	fmt.Println("Delete existing output and write result: ", outFileName)
+	err = infra.DeleteFileNameStartsWith(path, "output")
+	if err != nil {
+		fmt.Println("error deleting output file")
+		return
+	}
+
+	infra.WriteJson(outFileName, result, isIndent)
 
 	fmt.Println("Done")
 }
