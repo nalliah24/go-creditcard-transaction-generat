@@ -17,7 +17,7 @@ func main() {
 }
 
 func run(args []string) {
-	path := "../1data_out"
+	path := "data"
 	confName := "data/config.json"
 	outFileName := fmt.Sprintf("%s/%s", path, "output.json")
 

@@ -27,7 +27,7 @@ func TransHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// all good. start gen transactions
-		path := "../../1data_out"
+		path := "data"
 		outFileName := fmt.Sprintf("%s/%s", path, "output_web.json")
 		var trans m.TransactionList
 		isIndent := false

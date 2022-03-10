@@ -7,7 +7,7 @@ Generated transactions can be used in other application as input.
 
 ### Methods:
 
-Transaction Service has two methods. One generates sequentially and other concurrently. When generating hundreds of transactions concurrently, there is a significant amount of performance improvement. see below for benchmark test. Concurrent uses channels behind the screen.
+Transaction Service has two methods. One generates sequentially and other concurrently. When generating hundreds of transactions concurrently using channels, there is a significant amount of performance improvement. see below for benchmark test.
 
 ```code
 ts = reference the service in main / caller
@@ -17,19 +17,19 @@ ts.GenerateAllTransactionsConc(cfgs []m.Config) (m.TransactionList, error)
 func (trans TransactionList) PrepareSummary(cfgs []Config) (SummaryList, error)
 ```
 
-
 ### Required:
 
 #### Console App:
-config.json - This file located in 'data/' directory, contains an array of input parameters for transaction types.
-Number of transactions and Transaction Type are required fields. Other fields are optional and if missing in the config file, it will be replaced by the application. Transaction date is currently default to current date.
+config.json - This file located in 'data/' directory, contains an array of input parameters for transaction types. Number of transactions and Transaction Type are required fields. Other fields are optional and if missing in the config file, it will be replaced by the application. Transaction date is currently default to current date.
 
 Golang executable
 
 #### Web API:
-Run the server from web folder. Create a POST to host:5000/api/transactions.
+Run the server from web folder. Create a POST request to host:5000/api/transactions
 
-Create a json config request, similar to below and attached to body of the post call. Can use Postman or other clients.
+Create a JSON POST request similar to below and attached to body of the post call. Can use Postman or other clients.
+
+Todo: currently it creates and saves the file. can be extenced to download the file.
 
 Sample config file
 ```json
@@ -54,10 +54,15 @@ Sample config file
 ### Run:
 
 ```code
+console
+\creditcard\transaction_generator\cmd\console>console.exe
 \creditcard\transaction_generator\cmd\console>go run main.go
 
-\creditcard\transaction_generator\pkg\bank\service>go test
+web
+creditcard\transaction_generator\cmd\web\server>go run main.go
 
+tests
+\creditcard\transaction_generator\pkg\bank\service>go test
 \creditcard\transaction_generator\pkg\bank\service>go test -run=XXX -bench=.
 ```
 
