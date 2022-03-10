@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	m "github.com/nalliah24/go-creditcard-transaction-generator/pkg/bank/model"
 )
@@ -37,6 +38,24 @@ func WriteJson(filename string, data interface{}, isIndent bool) error {
 
 	if err := encoder.Encode(data); err != nil {
 		return err
+	}
+	return nil
+}
+
+// Deleate a file name starts with, arguments path and filename
+func DeleteFileNameStartsWith(path string, fnStarts string) error {
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		if strings.HasPrefix(file.Name(), fnStarts) {
+			err := os.Remove(path + "/" + file.Name())
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
