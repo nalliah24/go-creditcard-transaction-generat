@@ -17,8 +17,8 @@ func main() {
 }
 
 func run(args []string) {
-	path := "data"
-	confName := fmt.Sprintf("%s/%s", path, "config.json")
+	path := "../1data_out"
+	confName := "data/config.json"
 	outFileName := fmt.Sprintf("%s/%s", path, "output.json")
 
 	v := valArgs(args)
@@ -82,7 +82,7 @@ func run(args []string) {
 	fmt.Println("Delete existing output and write result: ", outFileName)
 	err = infra.DeleteFileNameStartsWith(path, "output")
 	if err != nil {
-		fmt.Println("error deleting output file")
+		fmt.Println("error deleting output file ", err.Error())
 		return
 	}
 
