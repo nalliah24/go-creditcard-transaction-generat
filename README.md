@@ -1,8 +1,7 @@
 # Transaction Generator
 
-Golang command line utility to generate sample credit card transactions and output as json file.
-
-Summarizes all transactions by type and output as json file.
+Golang command line and web api utility to generate sample credit card transactions and output as json file.
+Summarizes all transactions by type and timestamp with output.
 
 Generated transactions can be used in other application as input.
 
@@ -21,10 +20,16 @@ func (trans TransactionList) PrepareSummary(cfgs []Config) (SummaryList, error)
 
 ### Required:
 
-config.json - This file contains an array of input parameters for transaction types.
+#### Console App:
+config.json - This file located in 'data/' directory, contains an array of input parameters for transaction types.
 Number of transactions and Transaction Type are required fields. Other fields are optional and if missing in the config file, it will be replaced by the application. Transaction date is currently default to current date.
 
 Golang executable
+
+#### Web API:
+Run the server from web folder. Create a POST to host:5000/api/transactions.
+
+Create a json config request, similar to below and attached to body of the post call. Can use Postman or other clients.
 
 Sample config file
 ```json
